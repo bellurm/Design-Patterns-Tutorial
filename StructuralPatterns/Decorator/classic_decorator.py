@@ -63,7 +63,7 @@ class EncryptionDecorator(DataSourceDecorator):
         return self._encrypt(data)
 
     def _encrypt(self, data):
-        return ''.join(chr(ord(char) + 1) for char in data)  # Basit şifreleme (Caesar cipher)
+        return ''.join(chr(ord(char) + 1) for char in data)  # Toy character shift, not secure encryption
 
 class CompressionDecorator(DataSourceDecorator):
     def read_data(self):
@@ -71,12 +71,14 @@ class CompressionDecorator(DataSourceDecorator):
         return self._compress(data)
 
     def _compress(self, data):
-        return ''.join(char for i, char in enumerate(data) if i % 2 == 0)  # Basit sıkıştırma
+        return ''.join(char for i, char in enumerate(data) if i % 2 == 0)  # Lossy sampling demonstration, not reversible compression
 
 
 if __name__ == "__main__":
     # Dosya okuma için temel veri kaynağı
-    file_data_source = FileDataSource('data.txt')
+    from pathlib import Path
+    sample = Path(__file__).with_name('data.txt')
+    file_data_source = FileDataSource(sample)
 
     # Şifreleme ve sıkıştırma dekoratörleri ile veri kaynağını süsleme
     encrypted_data_source = EncryptionDecorator(file_data_source)

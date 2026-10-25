@@ -1,4 +1,7 @@
-import Singleton.Examples.Module.supermarket_module as supermarket_module
+if __package__:
+    from . import supermarket_module
+else:
+    import supermarket_module
 
 def main():
     checkout_instance = supermarket_module.SupermarketCheckout()

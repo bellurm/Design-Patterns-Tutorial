@@ -2,7 +2,9 @@ import re
 
 # Lexer (Tokenizatör)
 def lexer(expression):
-    tokens = re.findall(r'\d+|\+|\-|\*|\/', expression)  # Sayılar ve operatörleri ayır
+    if re.search(r'[^0-9+*/()\s-]', expression):
+        raise ValueError('Unsupported character in expression')
+    tokens = re.findall(r'\d+|[+*/()\-]', expression)  # Sayılar ve operatörleri ayır
 
     return tokens
 
@@ -28,9 +30,13 @@ def parser(tokens):
         elif token == ')':  # Parantez kapatma ise
             while stack and stack[-1] != '(':  # Yığın boşalmayana veya parantez açana kadar
                 output.append(stack.pop())  # Yığından operatörleri çıkarıp çıktıya ekle
+            if not stack:
+                raise ValueError('Unmatched closing parenthesis')
             stack.pop()  # Parantezi yığından çıkar
 
     while stack:  # Yığında kalan operatörleri çıktıya ekle
+        if stack[-1] == '(':
+            raise ValueError('Unmatched opening parenthesis')
         output.append(stack.pop())
 
     return output
